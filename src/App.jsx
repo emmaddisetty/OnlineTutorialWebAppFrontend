@@ -5,9 +5,11 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
-import Chat from './pages/Chat';
+import Connect from './pages/Connect';
 import VerifyEmail from './pages/VerifyEmail';
 import ManageCourses from './pages/ManageCourses';
+import Schedule from './pages/schedule';
+import Quizzes from './pages/Quizzes';
 
 function App() {
   return (
@@ -20,8 +22,10 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/manage-courses" element={<ManageCourses />} />
-          <Route path="/chat" element={<Chat />} />
+          <Route path="/connect" element={<Connect />} />
           <Route path="/verify/:token" element={<VerifyEmail />} />
+          <Route path="/schedule" element={<Schedule />} />
+          <Route path="/quizzes" element={<Quizzes />} />
         </Routes>
       </div>
     </AuthProvider>

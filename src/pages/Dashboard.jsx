@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
-import api from '../utils/api';
 
 export default function Dashboard() {
   const { user, setUser } = useContext(AuthContext);
@@ -1050,22 +1049,22 @@ export default function Dashboard() {
                 </a>
               </li>
               <li className="nav-item">
-                <a href="#" className="nav-link" onClick={() => navigate('/chat')}>
+                <a href="#" className="nav-link" onClick={() => navigate('/connect')}>
                   <i className="fas fa-message"></i>
-                  <span>Chat</span>
+                  <span>Connect</span>
                 </a>
               </li>
               
               <div className="nav-section">Learning</div>
               
               <li className="nav-item">
-                <a href="#" className="nav-link">
+                <a href="#" className="nav-link" onClick={() => navigate('/schedule')}>
                   <i className="fas fa-calendar-days"></i>
                   <span>Schedule</span>
                 </a>
               </li>
               <li className="nav-item">
-                <a href="#" className="nav-link">
+                <a href="#" className="nav-link" onClick={() => navigate('/Quizzes')}>
                   <i className="fas fa-clipboard-check"></i>
                   <span>Quizzes</span>
                 </a>
