@@ -14,6 +14,9 @@ export default function Courses() {
   const [showAddCoursePopup, setShowAddCoursePopup] = useState(false);
   const [showRedirectPopup, setShowRedirectPopup] = useState(null);
   const [showDetailsPopup, setShowDetailsPopup] = useState(null);
+  const [showSharePopup, setShowSharePopup] = useState(null);
+  const [shareEmail, setShareEmail] = useState('');
+  const [shareError, setShareError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [newCourse, setNewCourse] = useState({
     title: '',
@@ -128,7 +131,62 @@ export default function Courses() {
     navigate('/login');
   };
 
-  const handleEnroll = (course) => alert(`Enrolled in ${course.title}`);
+  const handleShare = (course) => {
+    setShowSharePopup(course);
+    setShareEmail('');
+    setShareError(null);
+  };
+
+  const handleShareSubmit = async (e) => {
+    e.preventDefault();
+    if (!shareEmail.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(shareEmail)) {
+      setShareError('Please enter a valid email address');
+      return;
+    }
+
+    try {
+      const course = showSharePopup;
+      const subject = `Course Recommendation: ${course.title}`;
+      const courseDetails = {
+        title: course.title,
+        instructor: course.instructor,
+        description: course.description,
+        category: course.category,
+        level: course.level,
+        duration: course.duration,
+        courseUrl: course.courseUrl,
+      };
+      // Fallback message for text version
+      const message = `
+        Course Title: ${course.title}
+        Instructor: ${course.instructor}
+        Description: ${course.description}
+        Category: ${course.category}
+        Level: ${course.level}
+        Duration: ${course.duration}
+        Course URL: ${course.courseUrl}
+      `;
+
+      await api.post('/email/send', {
+        toEmail: shareEmail,
+        subject,
+        message, // Fallback for text version
+        senderName: user?.name || 'Anonymous',
+        senderRole: user?.role || 'user',
+        recipientEmail: user?.email || 'Not provided',
+        recipientName: '',
+        type: 'course-share', // Indicate this is a course-share email
+        courseDetails, // Send structured course details
+      });
+
+      setShowSharePopup(null);
+      setShareEmail('');
+      setShareError(null);
+      alert('Course shared successfully!');
+    } catch (error) {
+      setShareError(error.response?.data?.message || 'Failed to send email');
+    }
+  };
 
   const styles = `
     html, body {
@@ -155,11 +213,14 @@ export default function Courses() {
       align-items: center;
       flex-wrap: wrap;
       gap: 1rem;
+      max-width: 100%;
+      box-sizing: border-box;
     }
     .header-left {
       display: flex;
       align-items: center;
       gap: 1rem;
+      flex-shrink: 0;
     }
     .section-title {
       font-size: 2.2rem;
@@ -191,8 +252,11 @@ export default function Courses() {
     }
     .search-container {
       flex: 1;
+      width: 100%;
       max-width: 400px;
+      min-width: 250px;
       position: relative;
+      margin: 0 1rem;
     }
     .search-input {
       width: 100%;
@@ -203,6 +267,7 @@ export default function Courses() {
       background: #f9fafb;
       color: #1e40af;
       transition: all 0.3s ease;
+      box-sizing: border-box;
     }
     .search-input:focus {
       outline: none;
@@ -230,11 +295,26 @@ export default function Courses() {
       letter-spacing: 0.5px;
       box-shadow: 0 3px 8px rgba(59, 130, 246, 0.12);
       transition: all 0.3s;
+      flex-shrink: 0;
     }
     .add-course-btn:hover {
       background: linear-gradient(90deg, #1e40af 0%, #3b82f6 100%);
       transform: translateY(-2px) scale(1.04);
       box-shadow: 0 6px 16px rgba(59, 130, 246, 0.18);
+    }
+    @media (max-width: 768px) {
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .search-container {
+        margin: 1rem 0;
+        max-width: 100%;
+      }
+      .add-course-btn {
+        width: 100%;
+        text-align: center;
+      }
     }
     .courses-grid {
       display: grid;
@@ -310,10 +390,10 @@ export default function Courses() {
       background: linear-gradient(90deg, #1e40af 0%, #3b82f6 100%);
       transform: translateY(-2px) scale(1.03);
     }
-    .enroll-btn {
+    .share-btn {
       background: linear-gradient(90deg, #93c5fd 0%, #3b82f6 100%);
     }
-    .enroll-btn:hover {
+    .share-btn:hover {
       background: linear-gradient(90deg, #3b82f6 0%, #93c5fd 100%);
       transform: translateY(-2px) scale(1.03);
     }
@@ -538,31 +618,36 @@ export default function Courses() {
       background: #4b5563;
       transform: translateY(-2px) scale(1.04);
     }
-    .popup-content.details, .popup-content.redirect {
+    .popup-content.details, .popup-content.redirect, .popup-content.share {
       min-height: 340px;
       max-width: 540px;
       flex-direction: column;
       padding: 0;
     }
     .popup-content.details .popup-left,
-    .popup-content.redirect .popup-left {
+    .popup-content.redirect .popup-left,
+    .popup-content.share .popup-left {
       background: linear-gradient(120deg, #3b82f6 0%, #1e40af 100%);
     }
     .popup-content.details .popup-title,
-    .popup-content.redirect .popup-title {
+    .popup-content.redirect .popup-title,
+    .popup-content.share .popup-title {
       color: #fff;
     }
     .popup-content.details .popup-icon,
-    .popup-content.redirect .popup-icon {
+    .popup-content.redirect .popup-icon,
+    .popup-content.share .popup-icon {
       color: #3b82f6;
     }
     .popup-content.details .popup-form-area,
-    .popup-content.redirect .popup-form-area {
+    .popup-content.redirect .popup-form-area,
+    .popup-content.share .popup-form-area {
       padding: 2.5rem 2rem;
       background: #f9fafb;
     }
     .popup-content.details .popup-form,
-    .popup-content.redirect .popup-form {
+    .popup-content.redirect .popup-form,
+    .popup-content.share .popup-form {
       gap: 0.7rem;
     }
     .details-image {
@@ -590,11 +675,7 @@ export default function Courses() {
       font-weight: 600;
       flex: 1;
     }
-    .popup-buttons.details {
-      justify-content: flex-end;
-      margin-top: 1.3rem;
-    }
-    .popup-buttons.redirect {
+    .popup-buttons.details, .popup-buttons.redirect, .popup-buttons.share {
       justify-content: flex-end;
       margin-top: 1.3rem;
     }
@@ -726,10 +807,10 @@ export default function Courses() {
                       <i className="fas fa-info-circle mr-2"></i> Details
                     </button>
                     <button
-                      className="action-button enroll-btn"
-                      onClick={() => handleEnroll(course)}
+                      className="action-button share-btn"
+                      onClick={() => handleShare(course)}
                     >
-                      <i className="fas fa-user-plus mr-2"></i> Enroll
+                      <i className="fas fa-share-alt mr-2"></i> Share
                     </button>
                   </div>
                 </motion.div>
@@ -986,6 +1067,64 @@ export default function Courses() {
                       Proceed
                     </button>
                   </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* --- SHARE POPUP --- */}
+        <AnimatePresence>
+          {showSharePopup && (
+            <motion.div
+              className="popup"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                className="popup-content share"
+                variants={popupVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              >
+                <div className="popup-left">
+                  <div className="popup-icon-circle">
+                    <i className="fas fa-share-alt popup-icon"></i>
+                  </div>
+                  <div className="popup-title">Share Course</div>
+                  <div className="popup-desc">
+                    Share <b>{showSharePopup.title}</b> with a friend!
+                  </div>
+                </div>
+                <div className="popup-form-area">
+                  <button className="popup-close" onClick={() => setShowSharePopup(null)}>
+                    <i className="fas fa-times"></i>
+                  </button>
+                  {shareError && <div className="general-error">{shareError}</div>}
+                  <form className="popup-form" onSubmit={handleShareSubmit}>
+                    <div className="form-group">
+                      <label className="form-label">Recipient Email</label>
+                      <input
+                        type="email"
+                        value={shareEmail}
+                        onChange={(e) => setShareEmail(e.target.value)}
+                        className="form-input"
+                        placeholder="Enter email address"
+                        required
+                      />
+                    </div>
+                    <div className="popup-buttons share">
+                      <button className="cancel-btn" type="button" onClick={() => setShowSharePopup(null)}>
+                        Cancel
+                      </button>
+                      <button className="publish-btn" type="submit">
+                        Send
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </motion.div>
             </motion.div>

@@ -7,7 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
 import Connect from './pages/Connect';
 import VerifyEmail from './pages/VerifyEmail';
-import ManageCourses from './pages/ManageCourses';
+import Support from './pages/Support';
 import Schedule from './pages/schedule';
 import Quizzes from './pages/Quizzes';
 
@@ -21,7 +21,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/courses" element={<Courses />} />
-          <Route path="/manage-courses" element={<ManageCourses />} />
+          <Route path="/support" element={<Support />} />
           <Route path="/connect" element={<Connect />} />
           <Route path="/verify/:token" element={<VerifyEmail />} />
           <Route path="/schedule" element={<Schedule />} />

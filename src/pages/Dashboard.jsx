@@ -7,10 +7,10 @@ export default function Dashboard() {
   const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [stats, setStats] = useState({
-    coursesEnrolled: 0,
-    completedLessons: 0,
-    upcomingDeadlines: 0,
-    averageProgress: 0
+    activeCourses: 0,
+    communityConnections: 0,
+    scheduledEvents: 0,
+    quizPerformance: 0
   });
   const [courses, setCourses] = useState([]);
   const [notifications, setNotifications] = useState([]);
@@ -22,10 +22,10 @@ export default function Dashboard() {
     if (user) {
       setTimeout(() => {
         setStats({
-          coursesEnrolled: 4,
-          completedLessons: 23,
-          upcomingDeadlines: 2,
-          averageProgress: 68
+          activeCourses: 4,
+          communityConnections: 12,
+          scheduledEvents: 5,
+          quizPerformance: 85
         });
         
         setCourses([
@@ -224,9 +224,9 @@ export default function Dashboard() {
     }
     
     .nav-item {
-      margin-bottom: 0.5rem;
-      border-radius: 8px;
-      transition: all 0.2s ease;
+      margin-bottom: 0.75rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
     }
@@ -236,9 +236,9 @@ export default function Dashboard() {
       position: absolute;
       left: 0;
       bottom: 0;
-      height: 2px;
+      height: 3px;
       width: 0;
-      background: #ff2e63;
+      background: linear-gradient(90deg, #ff2e63, #ff5e7e);
       transition: width 0.3s ease;
     }
     
@@ -247,46 +247,61 @@ export default function Dashboard() {
     }
     
     .nav-item.active {
-      background: rgba(255, 46, 99, 0.2);
+      background: rgba(255, 46, 99, 0.25);
+      box-shadow: inset 0 0 10px rgba(255, 46, 99, 0.2);
     }
     
     .nav-link {
       display: flex;
       align-items: center;
-      padding: 0.75rem 1rem;
+      padding: 1rem;
       color: #e0e0e0;
       text-decoration: none;
       font-weight: 500;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
       position: relative;
       z-index: 1;
       font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
     }
     
     .nav-link:hover {
       color: #ff2e63;
-      text-shadow: 0 0 5px rgba(255, 46, 99, 0.5);
+      text-shadow: 0 0 8px rgba(255, 46, 99, 0.6);
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
     }
     
     .nav-link i {
-      margin-right: 0.75rem;
-      font-size: 1.2rem;
+      margin-right: 1rem;
+      font-size: 1.4rem;
       transition: transform 0.3s ease;
     }
     
     .nav-link:hover i {
-      transform: scale(1.2);
+      transform: scale(1.15);
+      color: #ff2e63;
     }
     
     .nav-section {
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-      padding-left: 1rem;
-      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 2rem 0 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       color: #a0a0a0;
       font-family: 'Poppins', sans-serif;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      border-left: 3px solid #ff2e63;
+    }
+    
+    .nav-section i {
+      color: #ff2e63;
+      font-size: 1rem;
     }
     
     .user-profile {
@@ -504,11 +519,43 @@ export default function Dashboard() {
       padding: 1.5rem;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+      background-size: 20px 20px;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    
+    .stat-card.courses {
+      background: linear-gradient(145deg, #ffffff, #e0f2fe);
+    }
+    
+    .stat-card.connections {
+      background: linear-gradient(145deg, #ffffff, #fefce8);
+    }
+    
+    .stat-card.schedule {
+      background: linear-gradient(145deg, #ffffff, #ecfeff);
+    }
+    
+    .stat-card.quizzes {
+      background: linear-gradient(145deg, #ffffff, #f3e8ff);
     }
     
     .stat-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      transform: scale(1.03);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
     }
     
     .stat-header {
@@ -532,37 +579,47 @@ export default function Dashboard() {
       align-items: center;
       justify-content: center;
       font-size: 1.2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     
-    .stat-icon.purple {
-      background: rgba(124, 58, 237, 0.1);
-      color: #7c3aed;
+    .stat-icon.courses {
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      color: #fff;
     }
     
-    .stat-icon.blue {
-      background: rgba(59, 130, 246, 0.1);
-      color: #3b82f6;
+    .stat-icon.connections {
+      background: linear-gradient(135deg, #eab308, #facc15);
+      color: #fff;
     }
     
-    .stat-icon.green {
-      background: rgba(16, 185, 129, 0.1);
-      color: #10b981;
+    .stat-icon.schedule {
+      background: linear-gradient(135deg, #06b6d4, #22d3ee);
+      color: #fff;
     }
     
-    .stat-icon.amber {
-      background: rgba(245, 158, 11, 0.1);
-      color: #f59e0b;
+    .stat-icon.quizzes {
+      background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+      color: #fff;
     }
     
     .stat-value {
       font-size: 2rem;
       font-weight: 700;
       margin-bottom: 0.25rem;
+      background: linear-gradient(90deg, #2d3748, #4a5568);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     
     .stat-description {
       color: #718096;
       font-size: 0.85rem;
+    }
+    
+    .stat-secondary {
+      font-size: 0.8rem;
+      color: #a0aec0;
+      margin-top: 0.25rem;
     }
     
     .section-header {
@@ -1050,44 +1107,32 @@ export default function Dashboard() {
               </li>
               <li className="nav-item">
                 <a href="#" className="nav-link" onClick={() => navigate('/connect')}>
-                  <i className="fas fa-message"></i>
+                  <i className="fas fa-users"></i>
                   <span>Connect</span>
                 </a>
               </li>
               
-              <div className="nav-section">Learning</div>
+              <div className="nav-section">
+                <i className="fas fa-book-open"></i>
+                Learning
+              </div>
               
               <li className="nav-item">
                 <a href="#" className="nav-link" onClick={() => navigate('/schedule')}>
-                  <i className="fas fa-calendar-days"></i>
+                  <i className="fas fa-calendar-alt"></i>
                   <span>Schedule</span>
                 </a>
               </li>
               <li className="nav-item">
-                <a href="#" className="nav-link" onClick={() => navigate('/Quizzes')}>
-                  <i className="fas fa-clipboard-check"></i>
+                <a href="#" className="nav-link" onClick={() => navigate('/quizzes')}>
+                  <i className="fas fa-question-circle"></i>
                   <span>Quizzes</span>
                 </a>
               </li>
               <li className="nav-item">
-                <a href="#" className="nav-link">
-                  <i className="fas fa-chart-simple"></i>
-                  <span>Enrolled Programs</span>
-                </a>
-              </li>
-              
-              <div className="nav-section">Account</div>
-              
-              <li className="nav-item">
-                <a href="#" className="nav-link">
-                  <i className="fas fa-gear"></i>
-                  <span>Settings</span>
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="#" className="nav-link">
-                  <i className="fas fa-circle-info"></i>
-                  <span>Help</span>
+                <a href="#" className="nav-link" onClick={() => navigate('/support')}>
+                  <i className="fas fa-headset"></i>
+                  <span>Support</span>
                 </a>
               </li>
             </ul>
@@ -1126,59 +1171,79 @@ export default function Dashboard() {
               className="stats-container"
             >
               <motion.div 
-                whileHover={{ y: -5, boxShadow: "0 10px 15px rgba(0, 0, 0, 0.1)" }}
-                className="stat-card"
+                whileHover={{ scale: 1.03, boxShadow: "0 12px 20px rgba(0, 0, 0, 0.15)" }}
+                initial={{ x: -50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="stat-card courses"
+                onClick={() => navigate('/courses')}
               >
                 <div className="stat-header">
-                  <div className="stat-title">Courses Enrolled</div>
-                  <div className="stat-icon purple">
-                    <i className="fas fa-book"></i>
+                  <div className="stat-title">Active Courses</div>
+                  <div className="stat-icon courses">
+                    <i className="fas fa-graduation-cap"></i>
                   </div>
                 </div>
-                <div className="stat-value">{stats.coursesEnrolled}</div>
-                <div className="stat-description">Active courses in your account</div>
+                <div className="stat-value">{stats.activeCourses}</div>
+                <div className="stat-description">Courses you're currently enrolled in</div>
+                <div className="stat-secondary">3 in progress</div>
               </motion.div>
               
               <motion.div 
-                whileHover={{ y: -5, boxShadow: "0 10px 15px rgba(0, 0, 0, 0.1)" }}
-                className="stat-card"
+                whileHover={{ scale: 1.03, boxShadow: "0 12px 20px rgba(0, 0, 0, 0.15)" }}
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="stat-card connections"
+                onClick={() => navigate('/connect')}
               >
                 <div className="stat-header">
-                  <div className="stat-title">Lessons Completed</div>
-                  <div className="stat-icon blue">
-                    <i className="fas fa-check-circle"></i>
+                  <div className="stat-title">Community Connections</div>
+                  <div className="stat-icon connections">
+                    <i className="fas fa-users"></i>
                   </div>
                 </div>
-                <div className="stat-value">{stats.completedLessons}</div>
-                <div className="stat-description">Lessons you've finished so far</div>
+                <div className="stat-value">{stats.communityConnections}</div>
+                <div className="stat-description">Peers and mentors in your network</div>
+                <div className="stat-secondary">2 new this week</div>
               </motion.div>
               
               <motion.div 
-                whileHover={{ y: -5, boxShadow: "0 10px 15px rgba(0, 0, 0, 0.1)" }}
-                className="stat-card"
+                whileHover={{ scale: 1.03, boxShadow: "0 12px 20px rgba(0, 0, 0, 0.15)" }}
+                initial={{ x: 50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="stat-card schedule"
+                onClick={() => navigate('/schedule')}
               >
                 <div className="stat-header">
-                  <div className="stat-title">Upcoming Deadlines</div>
-                  <div className="stat-icon amber">
-                    <i className="fas fa-clock"></i>
+                  <div className="stat-title">Scheduled Events</div>
+                  <div className="stat-icon schedule">
+                    <i className="fas fa-calendar-alt"></i>
                   </div>
                 </div>
-                <div className="stat-value">{stats.upcomingDeadlines}</div>
-                <div className="stat-description">Tasks due in the next 7 days</div>
+                <div className="stat-value">{stats.scheduledEvents}</div>
+                <div className="stat-description">Upcoming classes and meetings</div>
+                <div className="stat-secondary">Next in 2 days</div>
               </motion.div>
               
               <motion.div 
-                whileHover={{ y: -5, boxShadow: "0 10px 15px rgba(0, 0, 0, 0.1)" }}
-                className="stat-card"
+                whileHover={{ scale: 1.03, boxShadow: "0 12px 20px rgba(0, 0, 0, 0.15)" }}
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="stat-card quizzes"
+                onClick={() => navigate('/quizzes')}
               >
                 <div className="stat-header">
-                  <div className="stat-title">Average Progress</div>
-                  <div className="stat-icon green">
-                    <i className="fas fa-chart-pie"></i>
+                  <div className="stat-title">Quiz Performance</div>
+                  <div className="stat-icon quizzes">
+                    <i className="fas fa-question-circle"></i>
                   </div>
                 </div>
-                <div className="stat-value">{stats.averageProgress}%</div>
-                <div className="stat-description">Overall course completion</div>
+                <div className="stat-value">{stats.quizPerformance}%</div>
+                <div className="stat-description">Average score across all quizzes</div>
+                <div className="stat-secondary">Improved by 5%</div>
               </motion.div>
             </motion.div>
             
@@ -1189,7 +1254,7 @@ export default function Dashboard() {
             >
               <div className="section-header">
                 <h2 className="section-title">My Courses</h2>
-                <a href="#" className="view-all">View All</a>
+                <a className="view-all" onClick={() => navigate('/courses')}>View All</a>
               </div>
               
               <div className="courses-grid">
@@ -1238,7 +1303,6 @@ export default function Dashboard() {
               <div className="notifications-container">
                 <div className="section-header">
                   <h2 className="section-title">Recent Notifications</h2>
-                  <a href="#" className="view-all">View All</a>
                 </div>
                 
                 {notifications.map(notification => (
